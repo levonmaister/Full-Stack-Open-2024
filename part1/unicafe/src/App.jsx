@@ -1,34 +1,41 @@
 import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
 
-function App() {
-  const [count, setCount] = useState(0)
+
+
+const Button = ({onSmash, text}) =>(
+<button onClick={onSmash}>{text}</button>
+
+
+)
+
+
+const App = () => {
+  // save clicks of each button to its own state
+  const [good, setGood] = useState(0)
+  const [neutral, setNeutral] = useState(0)
+  const [bad, setBad] = useState(0)
+
+
+  const badfunction = () => {
+    console.log("function was called")
+  }
+
+  const increasecount = (variable, setfunction) => {
+    console.log("adding +1" )
+    setfunction(variable+1)
+  }
 
   return (
-    <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
+    <div>
+      <h1>Return feedback</h1>
+      <Button onSmash={() => increasecount(good,setGood)} text={"good"}/>
+      <Button onSmash={() => increasecount(neutral,setNeutral)} text={"neutral"}/>
+      <Button onSmash={() => increasecount(bad,setBad)} text={"bad"}/>
+      <h1>Statistics</h1>
+          <div>good {good}</div>
+          <div>neutral {neutral}</div>
+          <div>bad {bad}</div>
+    </div>
   )
 }
 
