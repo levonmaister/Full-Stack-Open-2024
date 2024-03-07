@@ -57,6 +57,10 @@ const Header = (props) =>{
   
   }
   
+<<<<<<< HEAD
 
 export default Courses
   
+=======
+export default Courses
+>>>>>>> 74c59154830f354bd9f3f0684eeef604f94d3bec
