@@ -57,4 +57,6 @@ const Header = (props) =>{
   
   }
   
+
+export default Courses
   
