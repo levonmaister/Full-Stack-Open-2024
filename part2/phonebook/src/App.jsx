@@ -1,5 +1,5 @@
-import { useState } from 'react'
-
+import { useState, useEffect} from 'react'
+import axios from 'axios'
 
 const Filter = ({newFilter, setNewFilter}) => {
   
@@ -83,7 +83,7 @@ const ShowNumbersF = ({newFilter,persons}) => {
       {
         if(person.name.toLowerCase().includes(newFilter.toLowerCase())){
           console.log(person.name , " includes the letters " , newFilter)
-          namelist.push(<p>{person.name} {person.number}</p>)
+          namelist.push(<p key={person.id}>{person.name} {person.number}</p>)
   
         }
       })
@@ -99,29 +99,34 @@ const ShowNumbersF = ({newFilter,persons}) => {
 
 
 const App = () => {
-
-  const [persons, setPersons] = useState([
-    { name: 'Arto Hellas', number: '040-123456', id: 1 },
-    { name: 'Ada Lovelace', number: '39-44-5323523', id: 2 },
-    { name: 'Dan Abramov', number: '12-43-234345', id: 3 },
-    { name: 'Mary Poppendieck', number: '39-23-6423122', id: 4 }
-  ])
+  
 
 
+  const [persons, setPersons] = useState('')
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
   const [newFilter, setNewFilter] = useState('')
   const [newId, setNewId] = useState(4)
+  const [dataretrieved, setDataRetrieved] = useState(false)
+
+
+  useEffect(() => {
+    console.log('effect')
+    axios
+      .get('http://localhost:3001/persons').then(response => {
+        console.log('promise fulfilled')
+        setPersons(response.data)
+        console.log(response.data)
+        setDataRetrieved(true)
+      })
+  }, [])
 
 
 
 
 
-
-
-
-
- 
+ if(dataretrieved){
+  console.log("dataretrieved = true")
   return (
     <div>
       <Filter newFilter={newFilter} setNewFilter={setNewFilter}/>
@@ -138,7 +143,8 @@ const App = () => {
 
 
     </div>
-  )
+    )
+  }
 }
 
 export default App
