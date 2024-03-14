@@ -1,5 +1,6 @@
 import { useState, useEffect} from 'react'
 import axios from 'axios'
+import personService from './services/personer'
 
 const Filter = ({newFilter, setNewFilter}) => {
   
@@ -43,9 +44,17 @@ const PersonForm = ({newNumber,setNewNumber,newName,setNewName,setPersons,person
       number: newNumber,
       id: newId + 1
     }
-    setPersons(persons.concat(PersonObject))
-    setNewName('')
-    setNewNumber('')
+
+    personService.create(PersonObject).then(
+      returnedperson=> {
+        console.log("Added a person" + returnedperson)
+        setPersons(persons.concat(returnedperson))
+        setNewName('')
+        setNewNumber('')
+      }
+    )
+    
+
   }
   }
   
@@ -69,21 +78,27 @@ const PersonForm = ({newNumber,setNewNumber,newName,setNewName,setPersons,person
 }
 
 
-const ShowNumbersF = ({newFilter,persons}) => {
+
+const ShowNumbersF = ({newFilter,persons,setRemove}) => {
+
+
 
   const ShowNumbers = () => {
     console.log("Show Numbers Called")
-   let namelist = []
+   let namelist = []  
     if (newFilter == ''){
       console.log("No filter applied")
-      namelist = persons.map(person => <p key={person.id}>{person.name} {person.number}</p>)
+      namelist = persons.map(person => 
+        <li key={person.id}> {person.name + " " + person.number} <button type="submit" onClick={()=>setRemove(person.id)}>delete</button> </li>)
         }
     else{
       persons.forEach((person)=>
       {
         if(person.name.toLowerCase().includes(newFilter.toLowerCase())){
           console.log(person.name , " includes the letters " , newFilter)
-          namelist.push(<p key={person.id}>{person.name} {person.number}</p>)
+          namelist.push(
+            <li key={person.id}> {person.name + " " + person.number} <button type="submit" onClick={()=>setRemove(person.id)}>delete</button> </li>
+          )
   
         }
       })
@@ -99,34 +114,56 @@ const ShowNumbersF = ({newFilter,persons}) => {
 
 
 const App = () => {
-  
 
 
   const [persons, setPersons] = useState('')
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
   const [newFilter, setNewFilter] = useState('')
-  const [newId, setNewId] = useState(4)
+  const [newId, setNewId] = useState(0)
   const [dataretrieved, setDataRetrieved] = useState(false)
+  const [remove,setRemove] = useState(-1)
 
-
-  useEffect(() => {
-    console.log('effect')
-    axios
-      .get('http://localhost:3001/persons').then(response => {
-        console.log('promise fulfilled')
-        setPersons(response.data)
-        console.log(response.data)
-        setDataRetrieved(true)
+  const removeperson = () =>{
+   
+    if(remove!==-1){
+      if(window.confirm("Do you really want to remove this person")){
+    console.log("removing " + remove)
+    personService.remove(remove).then(res=>{
+      personService.getAll().then(persons => {
+        console.log("getting new person list after removal " + persons.data)
+        setPersons(persons)
       })
-  }, [])
+    })
+    console.log("remove function gone through")
+    setRemove(-1)
+  }
+    
+  
 
+  }
+    else{
+    console.log("nothing to remove")
+    }}
 
+  const basicrender = () => {
+    console.log('effect')
+    personService.getAll().then(persons => {
+      console.log("promise fulfilled")
+      setPersons(persons)
+      setDataRetrieved(true)
+    })
+  }
+
+  useEffect(basicrender,[])
+    
+
+  removeperson()
 
 
 
  if(dataretrieved){
-  console.log("dataretrieved = true")
+  console.log("rendering")
   return (
     <div>
       <Filter newFilter={newFilter} setNewFilter={setNewFilter}/>
@@ -138,13 +175,23 @@ const App = () => {
 
       <h2>Numbers</h2>
 
-      <ShowNumbersF persons={persons} newFilter={newFilter} />
+      <ShowNumbersF persons={persons} newFilter={newFilter} setRemove={setRemove} />
       
 
 
     </div>
     )
   }
+  else{
+    personService.getAll().then(persons =>{
+      console.log("new id set")
+      setNewId(persons[persons.length-1].id)
+    })
+
+  }
+
+  
+
 }
 
 export default App
