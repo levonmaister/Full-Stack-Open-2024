@@ -9,6 +9,9 @@ const app = require('../app')
 const { application } = require('express')
 const api = supertest(app)
 
+
+
+
 describe("database tests with 2 blogs ", () => {
 
   let token
@@ -45,6 +48,7 @@ describe("database tests with 2 blogs ", () => {
     token = ChadLogin.body.token
     userId = ChadLogin.body.id
 
+    console.log("USEDID: ", userId)
 
     const blog1 = {
         "title": "Mumindalens kustkompani",

@@ -3,13 +3,14 @@ const usersRouter = require('express').Router()
 const User = require('../models/user')
 
 usersRouter.post('/', async (request, response) => {
+  console.log("USER POST")
   const { username, name, password } = request.body
 
   const saltRounds = 10
 
     if(!username || !password){response.status(401).json({error: 'please fill out both username and password'})}
     if(password.length<3 || username.length<3){response.status(401).json({error: 'please make the password at least charachters long'})}
- //   if(User.find({}).includes(username)){response.status(401).json({error: 'please make the username unique'})}
+  //  if(User.find({}).includes(username)){response.status(401).json({error: 'please make the username unique'})}
 
     const users = await User.find({})
     usernamelist = users.map(user=>user.username)

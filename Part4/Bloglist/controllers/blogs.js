@@ -22,13 +22,15 @@ blogRouter.get('/', async (request, response) => {
 //Authentication
     const user = request.user
 
+    console.log("USER: ", user._id, " created new blog")
+
 // Create new blog according to model
     const blog = new Blog({
       author: body.author,
       title: body.title,
       url: body.url,
       likes: body.likes,
-      user: user.id
+      user: user._id
     })
 
     
