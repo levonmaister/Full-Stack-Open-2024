@@ -1,0 +1,17 @@
+.navbar {
+    display: flex;
+    align-items: center;
+    background-color: rgb(186, 179, 179);
+  }
+  
+  .nav-link {
+    padding: 5px;
+  }
+  
+  .nav-text {
+    padding: 5px;
+  }
+  
+  .logout-button {
+    margin-left: 5px;
+  }
